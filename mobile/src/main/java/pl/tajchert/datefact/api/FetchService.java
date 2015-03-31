@@ -1,17 +1,15 @@
 package pl.tajchert.datefact.api;
 
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import java.util.Calendar;
 
-import pl.tajchert.datefact.R;
+import pl.tajchert.datefact.NotificationFactory;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -37,7 +35,9 @@ public class FetchService extends Service {
         articleGetter.getFactForDate("false", "true", new Callback<DateApi>() {
             @Override
             public void success(DateApi dateApi, Response response) {
-                showNotifiction("Fact about today!", dateApi.text);
+                Notification notification = NotificationFactory.showNotifictionMobile(FetchService.this, "Fact about today!", dateApi.text);
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(FetchService.this);
+                notificationManager.notify(876, notification);
             }
 
             @Override
@@ -46,23 +46,6 @@ public class FetchService extends Service {
             }
         });
     }
-
-    private void showNotifiction(String title, String text) {
-        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(FetchService.this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setAutoCancel(true)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
-                        .setContentTitle(title)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setContentText(text)
-                        .setContentIntent(contentIntent);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(FetchService.this);
-        notificationManager.notify(876, notificationBuilder.build());
-    }
-
 
     public RestAdapter getHostAdapter(String baseHost) {
         RestAdapter restAdapter = new RestAdapter.Builder()
