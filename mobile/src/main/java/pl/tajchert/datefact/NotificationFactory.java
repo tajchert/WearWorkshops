@@ -5,12 +5,16 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
 public class NotificationFactory {
 
     public static Notification showNotifictionMobile(Context context, String title, String text) {
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent contentPendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent wikipediaWebIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://en.wikipedia.org/wiki/Portal:Current_events"));
+        PendingIntent wikipediaPendingIntent = PendingIntent.getActivity(context, 0, wikipediaWebIntent, 0);
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(context)
@@ -20,8 +24,8 @@ public class NotificationFactory {
                         .setContentTitle(title)
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setContentText(text)
-                        .addAction(new NotificationCompat.Action())
-                        .setContentIntent(contentIntent);
+                        .addAction(new NotificationCompat.Action(R.mipmap.ic_launcher, "Open Wikipedia", wikipediaPendingIntent))
+                        .setContentIntent(contentPendingIntent);
 
         return notificationBuilder.build();
 
