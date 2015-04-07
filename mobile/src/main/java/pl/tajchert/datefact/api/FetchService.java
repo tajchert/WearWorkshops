@@ -10,6 +10,7 @@ import android.util.Log;
 import java.util.Calendar;
 
 import pl.tajchert.datefact.NotificationFactory;
+import pl.tajchert.datefact.wear.SendStringToNode;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -35,9 +36,10 @@ public class FetchService extends Service {
         articleGetter.getFactForDate("false", "true", new Callback<DateApi>() {
             @Override
             public void success(DateApi dateApi, Response response) {
-                Notification notification = NotificationFactory.showNotifictionWear(FetchService.this, "Fact about today!", dateApi.text);
+                Notification notification = NotificationFactory.showNotifictionMobile(FetchService.this, "Mobile Date Fact", dateApi.text);
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(FetchService.this);
                 notificationManager.notify(876, notification);
+                new SendStringToNode(dateApi.text, FetchService.this).start();
             }
 
             @Override
