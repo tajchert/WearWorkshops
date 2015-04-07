@@ -35,7 +35,7 @@ public class FetchService extends Service {
         articleGetter.getFactForDate("false", "true", new Callback<DateApi>() {
             @Override
             public void success(DateApi dateApi, Response response) {
-                Notification notification = NotificationFactory.showNotifictionMobile(FetchService.this, "Fact about today!", dateApi.text);
+                Notification notification = NotificationFactory.showNotifictionWear(FetchService.this, "Fact about today!", dateApi.text);
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(FetchService.this);
                 notificationManager.notify(876, notification);
             }
